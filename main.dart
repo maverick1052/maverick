@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +56,10 @@ class MyAppState extends ChangeNotifier {
     favorites.remove(pair);
     notifyListeners();
   }
+  var userName = 'Siddharth';
+  var userRollNo = '221052';
+  var userEmail = 'siddharthg22@iitk.ac.in';
+  var userCity = 'Kanpur';
 }
 
 class MyHomePage extends StatefulWidget {
@@ -97,87 +100,93 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth < 450) {
-            // Use a more mobile-friendly layout with BottomNavigationBar
-            // on narrow screens.
-            return Column(
-              children: [
-                Expanded(child: mainArea),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: 1, // Adjust width as needed
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedIndex = 2;
-                        });
-                      },
-                      child: Icon(Icons.person),
+      body: Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 450) {
+              // Use a more mobile-friendly layout with BottomNavigationBar
+              // on narrow screens.
+              return Center(
+                child: Column(
+                  children: [
+                    Expanded(child: mainArea),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: 1, // Adjust width as needed
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedIndex = 2;
+                            });
+                          },
+                          child: Icon(Icons.person),
+                        ),
+                      ),
                     ),
-                  ),
+                    SafeArea(
+                      child: BottomNavigationBar(
+                        items: [
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.home),
+                            label: 'Home',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.favorite),
+                            label: 'Favorites',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.person),
+                            label: 'Profile', // Add the new Profile tab
+                          ),
+                        ],
+                        currentIndex: selectedIndex,
+                        onTap: (value) {
+                          setState(() {
+                            selectedIndex = value;
+                          });
+                        },
+                      ),
+                    )
+                  ],
                 ),
-                SafeArea(
-                  child: BottomNavigationBar(
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
+              );
+            } else {
+              return Center(
+                child: Row(
+                  children: [
+                    SafeArea(
+                      child: NavigationRail(
+                        extended: constraints.maxWidth >= 600,
+                        destinations: [
+                          NavigationRailDestination(
+                            icon: Icon(Icons.home),
+                            label: Text('Home'),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.favorite),
+                            label: Text('Favorites'),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.person),
+                            label: Text('Profile'), // Add the new Profile tab
+                          ),
+                        ],
+                        selectedIndex: selectedIndex,
+                        onDestinationSelected: (value) {
+                          setState(() {
+                            selectedIndex = value;
+                          });
+                        },
                       ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite),
-                        label: 'Favorites',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.person),
-                        label: 'Profile', // Add the new Profile tab
-                      ),
-                    ],
-                    currentIndex: selectedIndex,
-                    onTap: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
-                )
-              ],
-            );
-          } else {
-            return Row(
-              children: [
-                SafeArea(
-                  child: NavigationRail(
-                    extended: constraints.maxWidth >= 600,
-                    destinations: [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.home),
-                        label: Text('Home'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.favorite),
-                        label: Text('Favorites'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.person),
-                        label: Text('Profile'), // Add the new Profile tab
-                      ),
-                    ],
-                    selectedIndex: selectedIndex,
-                    onDestinationSelected: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
+                    ),
+                    Expanded(child: mainArea),
+                  ],
                 ),
-                Expanded(child: mainArea),
-              ],
-            );
-          }
-        },
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -186,11 +195,44 @@ class _MyHomePageState extends State<MyHomePage> {
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('User'),
+    var appState = context.watch<MyAppState>();
+
+    return
+       Column(
+
+        children: [
+          CircleAvatar(
+            radius: 50,
+            backgroundImage: AssetImage('avatar/avatarss.jpg'), // Add your image asset path
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Profile Page',
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Name: ${appState.userName}',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+          Text(
+            'Roll No: ${appState.userRollNo}',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+          Text(
+            'Email ID: ${appState.userEmail}',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+          Text(
+            'City: ${appState.userCity}',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+        ],
+
     );
   }
 }
+
 
 
 class GeneratorPage extends StatelessWidget {
@@ -210,11 +252,6 @@ class GeneratorPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            flex: 3,
-            child: HistoryListView(),
-          ),
-          SizedBox(height: 10),
           BigCard(pair: pair),
           SizedBox(height: 10),
           Row(
@@ -242,6 +279,10 @@ class GeneratorPage extends StatelessWidget {
     );
   }
 }
+
+
+
+
 
 class BigCard extends StatelessWidget {
   const BigCard({
